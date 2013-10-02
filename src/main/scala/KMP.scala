@@ -13,7 +13,6 @@ object KMP {
    * @return The pattern exists in text or not .
    */
   def search(text: String, pattern: String): Boolean = {
-    val patternChars = pattern.toList
     val patternLength = pattern.length
     if (patternLength <= 0) return true
     else {
@@ -21,14 +20,13 @@ object KMP {
       if (textLength < patternLength) false;
       else {
         val table = makeTable(pattern)
-        val textChars = text.toList
         def comp(i: Int, j: Int): Boolean = {
           if (textLength - i < patternLength - j)
             false
           else {
             (i < textLength, j < patternLength) match {
               case (true, true) =>
-                if (textChars(i) == patternChars(j)) {
+                if (text(i) == pattern(j)) {
                   comp(i + 1, j + 1)
                 } else {
                   val index = table(j)
