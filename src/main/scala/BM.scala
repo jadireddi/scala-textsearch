@@ -54,7 +54,7 @@ object BM {
         table.get(charOfText) match {
           case None => BMIndex(nextPatternIndex, tailIndex + patternLength, tailIndex + patternLength)
           case Some(shiftFromTail) =>
-            if ((patternLength - shiftFromTail - 1) >= patternLength)
+            if ((patternLength - shiftFromTail - 1) >= patternIndex)
               BMIndex(nextPatternIndex, tailIndex + 1, tailIndex + 1)
             else
               BMIndex(nextPatternIndex, tailIndex + shiftFromTail, tailIndex + shiftFromTail)
