@@ -1,19 +1,6 @@
 package com.rkaneko.algorithm.search
 
 /**
- * Indexes class .
- *
- * @param patternIndex Index of pattern text .
- * @param textIndex Index of text text .
- * @param tailIndex Index of text tail .
- */
-private case class BMIndex(
-  patternIndex: Int,
-  textIndex: Int,
-  tailIndex: Int)
-
-
-/**
  * BM (Boyer-Moore) method .
  */
 object BM {
@@ -40,24 +27,24 @@ object BM {
         } else {
           if (isDebug)
             println(s"""${text(textIndex)} equals ${pattern(patternIndex)} ?""")
-          val next = nextIndex(patternIndex, textIndex, tailIndex)
-          inner(next.patternIndex, next.textIndex, next.tailIndex)
+          val (nextPatternIndex, nextTextIndex, nextTailIndex) = nextIndex(patternIndex, textIndex, tailIndex)
+          inner(nextPatternIndex, nextTextIndex, nextTailIndex)
         }
       }
     }
-    def nextIndex(patternIndex: Int, textIndex: Int, tailIndex: Int): BMIndex = {
+    def nextIndex(patternIndex: Int, textIndex: Int, tailIndex: Int): Tuple3[Int, Int, Int] = {
       val charOfText = text(textIndex)
       if (charOfText == pattern(patternIndex))
-        BMIndex(patternIndex = patternIndex - 1, textIndex = textIndex - 1, tailIndex = tailIndex)
+        (patternIndex - 1, textIndex - 1, tailIndex)
       else {
         val nextPatternIndex = patternLength - 1
         table.get(charOfText) match {
-          case None => BMIndex(nextPatternIndex, tailIndex + patternLength, tailIndex + patternLength)
+          case None => (nextPatternIndex, tailIndex + patternLength, tailIndex + patternLength)
           case Some(shiftFromTail) =>
             if ((patternLength - shiftFromTail - 1) >= patternIndex)
-              BMIndex(nextPatternIndex, tailIndex + 1, tailIndex + 1)
+              (nextPatternIndex, tailIndex + 1, tailIndex + 1)
             else
-              BMIndex(nextPatternIndex, tailIndex + shiftFromTail, tailIndex + shiftFromTail)
+              (nextPatternIndex, tailIndex + shiftFromTail, tailIndex + shiftFromTail)
         }
       }
     }
